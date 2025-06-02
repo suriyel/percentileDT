@@ -4,20 +4,20 @@ scalaVersion := "2.12.17"
 
 val sparkVersion = "3.4.0"
 
-// 添加仓库配置
+// 仓库配置
 resolvers ++= Seq(
-  "Maven Central" at "https://repo1.maven.org/maven2/",
-  "Spark Packages Repo" at "https://repos.spark-packages.org/",
-  "Typesafe Repository" at "https://repo.typesafe.com/typesafe/releases/"
+  "Maven Central" at "https://repo1.maven.org/maven2/"
 )
 
+// 依赖配置
 libraryDependencies ++= Seq(
   "org.apache.spark" %% "spark-core" % sparkVersion,
   "org.apache.spark" %% "spark-sql" % sparkVersion,
-  "org.apache.spark" %% "spark-mllib" % sparkVersion
+  "org.apache.spark" %% "spark-mllib" % sparkVersion,
+  "org.scalatest" %% "scalatest" % "3.2.15" % Test
 )
 
-// 排除不需要的传递依赖
+// 排除冲突依赖
 libraryDependencies := libraryDependencies.value.map(_.exclude("org.slf4j", "slf4j-log4j12"))
 
 // 编译选项
@@ -31,4 +31,14 @@ scalacOptions ++= Seq(
 javaOptions ++= Seq(
   "-Xmx8g",
   "-XX:+UseG1GC"
+)
+
+// 测试配置
+Test / parallelExecution := false
+Test / fork := true
+Test / javaOptions ++= Seq(
+  "-Xmx4g",
+  "-XX:+UseG1GC",
+  "-Dspark.ui.enabled=false",
+  "-Dspark.master=local[2]"
 )
