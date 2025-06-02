@@ -41,10 +41,10 @@ class PercentileCalculator(spark: SparkSession) {
   }
 
   /**
-   * 方法2: 使用percentile_approx (另一种近似算法)
+   * 方法2: 使用percentile (另一种近似算法)
    */
-  def calculatePercentileApprox(df: DataFrame): DataFrame = {
-    println("开始计算 percentile_approx...")
+  def calculatePercentile(df: DataFrame): DataFrame = {
+    println("开始计算 percentile...")
     val startTime = System.currentTimeMillis()
 
     // 构建聚合表达式
@@ -53,13 +53,13 @@ class PercentileCalculator(spark: SparkSession) {
       p <- percentiles
     } yield {
       val colName = s"${col}_p${(p * 100).toInt}_approx2"
-      expr(s"percentile_approx($col, $p, 10000)").as(colName)
+      expr(s"percentile($col, $p, 10000)").as(colName)
     }
 
     val result = df.groupBy("id").agg(aggExprs.head, aggExprs.tail: _*)
 
     val endTime = System.currentTimeMillis()
-    println(s"percentile_approx 计算完成，耗时: ${endTime - startTime}ms")
+    println(s"percentile 计算完成，耗时: ${endTime - startTime}ms")
 
     result
   }

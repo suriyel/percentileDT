@@ -39,7 +39,7 @@ object QuickTest {
       println(s"approx_percentile 结果行数: ${result1.count()}")
 
       println("\n测试 percentile_approx...")
-      val result2 = calculator.calculatePercentileApprox(df)
+      val result2 = calculator.calculatePercentile(df)
       println(s"percentile_approx 结果行数: ${result2.count()}")
 
       if (numRecords <= 100000) {
